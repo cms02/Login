@@ -3,7 +3,7 @@ package com.example.Login.entity;
 import javax.persistence.*;
 
 @Entity
-public class Member {
+public class Member extends BaseEntity{
 
     @Id
     @GeneratedValue
@@ -11,6 +11,8 @@ public class Member {
     private Long id;
 
     private String username;
+
+    private String password;
 
     private int age;
 

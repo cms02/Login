@@ -1,8 +1,14 @@
 package com.example.Login.entity;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity{
 
     @Id
@@ -17,5 +23,5 @@ public class Member extends BaseEntity{
     private int age;
 
     @Enumerated(EnumType.STRING)
-    private Authority authority;
+    private Role role;
 }

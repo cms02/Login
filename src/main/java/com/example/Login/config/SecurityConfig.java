@@ -1,10 +1,9 @@
 package com.example.Login.config;
 
-import com.example.Login.jwt.JwtAuthenticationFilter;
-import com.example.Login.jwt.JwtAuthorizationFilter;
+import com.example.Login.config.jwt.JwtAuthenticationFilter;
+import com.example.Login.config.jwt.JwtAuthorizationFilter;
 import com.example.Login.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

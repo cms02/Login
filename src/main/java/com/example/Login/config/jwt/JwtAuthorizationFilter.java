@@ -1,4 +1,4 @@
-package com.example.Login.jwt;
+package com.example.Login.config.jwt;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;

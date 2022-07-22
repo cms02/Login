@@ -1,5 +1,10 @@
 package com.example.Login.config;
 
+import com.example.Login.jwt.JwtAuthenticationFilter;
+import com.example.Login.jwt.JwtAuthorizationFilter;
+import com.example.Login.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,7 +16,12 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig{
+
+    private final CorsConfig corsConfig;
+
+    private final MemberRepository memberRepository;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -36,6 +46,10 @@ public class SecurityConfig{
         @Override
         public void configure(HttpSecurity http) throws Exception {
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
+            http
+                    .addFilter(corsConfig.corsFilter())
+                    .addFilter(new JwtAuthenticationFilter(authenticationManager))
+                    .addFilter(new JwtAuthorizationFilter(authenticationManager));
         }
     }
 

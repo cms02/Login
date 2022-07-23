@@ -20,7 +20,10 @@ public class TokenUtil {
     }
 
     public static String verifyToken(HttpServletRequest request) {
-        return null;
+
+        String jwtToken = request.getHeader(JwtProperties.HEADER_STRING).replace(JwtProperties.TOKEN_PREFIX, "");
+
+        return JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(jwtToken).getClaim("username").asString();
     }
 
 

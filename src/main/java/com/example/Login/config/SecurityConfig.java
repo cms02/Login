@@ -50,7 +50,7 @@ public class SecurityConfig{
             http
                     .addFilter(corsConfig.corsFilter())
                     .addFilter(new JwtAuthenticationFilter(authenticationManager))
-                    .addFilter(new JwtAuthorizationFilter(authenticationManager));
+                    .addFilter(new JwtAuthorizationFilter(authenticationManager, memberRepository));
         }
     }
 

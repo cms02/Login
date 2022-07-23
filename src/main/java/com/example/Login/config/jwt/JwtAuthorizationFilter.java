@@ -42,9 +42,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             Member member = memberRepository.findByUsername(username);
 
             PrincipalDetails principalDetails = new PrincipalDetails(member);
-            Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
 
+            Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         chain.doFilter(request, response);

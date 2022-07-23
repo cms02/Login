@@ -10,4 +10,11 @@ public class MemberRequestDto {
         private String password;
     }
 
+    @Data
+    public static class Token {
+        private String username;
+    }
+
+
+
 }

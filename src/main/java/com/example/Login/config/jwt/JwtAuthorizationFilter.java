@@ -1,5 +1,6 @@
 package com.example.Login.config.jwt;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.example.Login.config.auth.PrincipalDetails;
 import com.example.Login.entity.Member;
 import com.example.Login.repository.MemberRepository;
@@ -36,19 +37,26 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             return;
         }
 
-        String username = TokenUtil.verifyToken(request);
+        try {
+            String username = TokenUtil.verifyToken(request);
 
-        if (username != null) {
-            Member member = memberRepository.findByUsername(username);
+            if (username != null) {
+                Member member = memberRepository.findByUsername(username);
 
-            PrincipalDetails principalDetails = new PrincipalDetails(member);
+                PrincipalDetails principalDetails = new PrincipalDetails(member);
 
-            Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
+                Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+
+            chain.doFilter(request, response);
+        } catch (TokenExpiredException e) {
+            logger.error("Token Expired");
+
         }
 
-        chain.doFilter(request, response);
+
 
 
 

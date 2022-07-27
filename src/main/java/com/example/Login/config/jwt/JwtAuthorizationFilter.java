@@ -18,6 +18,7 @@ import java.io.IOException;
 
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
+    /*인가 처리 관련 로직*/
 
     private final MemberRepository memberRepository;
 
@@ -29,7 +30,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-        String jwtHeader = request.getHeader("Authorization");
+        /*header 값 체크  */
+        String jwtHeader = request.getHeader(JwtProperties.HEADER_STRING);
 
         if (jwtHeader == null || !jwtHeader.startsWith("Bearer")) {
             chain.doFilter(request, response);
@@ -37,6 +39,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         }
 
         try {
+            /*토큰 검증*/
             String username = TokenUtil.verifyToken(request);
 
             if (username != null) {
@@ -46,6 +49,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
                 Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
 
+                /*SecurityContext에 직접 접근 후 세션 생성 -> 자동으로 UserDetailsService에 있는 loadByUsername 호출*/
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
 

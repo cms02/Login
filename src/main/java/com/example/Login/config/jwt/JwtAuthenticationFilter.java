@@ -24,24 +24,30 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+
     private ObjectMapper objectMapper = new ObjectMapper();
 
     private final AuthenticationManager authenticationManager;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-
+        /*[post] /login 요청 시 진입*/
         log.info("JwtAuthenticationFilter 진입");
 
         MemberRequestDto.Login loginDto = new MemberRequestDto.Login();
         try {
+            /*입력한 아이디, 패스워드 파싱 */
             loginDto = objectMapper.readValue(request.getInputStream(), MemberRequestDto.Login.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        /*UsernamePassword 로 토큰 생성*/
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
 
+        /* authenticate() 호출 시,  UserDetailsService 의 loadUserByUsername 호출 후
+        *  UserDetails 리턴 받아서 토큰의 두번째 파라미터 값인 credential 과 UserDetails의 password 값 비교 후
+        *  Authentication 객체 만들어서 필터 체인으로 Return*/
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
 
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
@@ -56,6 +62,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
 
+        /*Login 성공 Response 담기*/
         MemberResponseDto.Login memberResponseDto = MemberResponseDto.Login.builder()
                 .username(principalDetails.getUsername())
                 .message("LOGIN SUCCESS")
@@ -66,6 +73,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .status(HttpStatus.OK)
                 .build();
 
+        /*JWT Token 생성 후 Response Header에 담기*/
         String jwtToken = TokenUtil.generateToken(principalDetails.getMember());
 
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);

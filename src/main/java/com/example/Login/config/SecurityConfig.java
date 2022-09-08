@@ -29,6 +29,10 @@ public class SecurityConfig{
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
+                .exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                .accessDeniedHandler(new CustomAccessDeniedHandler())
+                .and()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -53,10 +57,10 @@ public class SecurityConfig{
                     .addFilter(corsConfig.corsFilter())
                     .addFilter(new JwtAuthenticationFilter(authenticationManager))
                     .addFilter(new JwtAuthorizationFilter(authenticationManager, memberRepository));
-            http
-                    .exceptionHandling()
-                    .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                    .accessDeniedHandler(new CustomAccessDeniedHandler());
+//            http
+//                    .exceptionHandling()
+//                    .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+//                    .accessDeniedHandler(new CustomAccessDeniedHandler());
         }
     }
 

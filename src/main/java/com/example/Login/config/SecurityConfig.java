@@ -1,5 +1,7 @@
 package com.example.Login.config;
 
+import com.example.Login.config.auth.handler.CustomAccessDeniedHandler;
+import com.example.Login.config.auth.handler.CustomAuthenticationEntryPoint;
 import com.example.Login.config.jwt.JwtAuthenticationFilter;
 import com.example.Login.config.jwt.JwtAuthorizationFilter;
 import com.example.Login.repository.MemberRepository;
@@ -39,7 +41,7 @@ public class SecurityConfig{
                         .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
                         .antMatchers("/api/v1/admin/**")
                         .access("hasRole('ROLE_ADMIN')")
-                        .anyRequest().permitAll())
+                        .anyRequest().authenticated())
                 .build();
     }
 
@@ -51,6 +53,10 @@ public class SecurityConfig{
                     .addFilter(corsConfig.corsFilter())
                     .addFilter(new JwtAuthenticationFilter(authenticationManager))
                     .addFilter(new JwtAuthorizationFilter(authenticationManager, memberRepository));
+            http
+                    .exceptionHandling()
+                    .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                    .accessDeniedHandler(new CustomAccessDeniedHandler());
         }
     }
 
@@ -58,6 +64,5 @@ public class SecurityConfig{
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 }

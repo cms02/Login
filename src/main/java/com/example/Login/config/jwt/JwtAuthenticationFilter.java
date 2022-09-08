@@ -24,14 +24,12 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-
     private ObjectMapper objectMapper = new ObjectMapper();
-
     private final AuthenticationManager authenticationManager;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        /*[post] /login 요청 시 진입*/
+        /*  /login[POST] 요청 시 진입*/
         log.info("JwtAuthenticationFilter 진입");
 
         MemberRequestDto.Login loginDto = new MemberRequestDto.Login();
@@ -53,12 +51,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         log.info("Authentication: " + principalDetails.getUsername());
 
-
         return authentication;
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
 
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
 

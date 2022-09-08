@@ -4,6 +4,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.example.Login.config.auth.PrincipalDetails;
 import com.example.Login.entity.Member;
 import com.example.Login.repository.MemberRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
+@Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     /*인가 처리 관련 로직*/
 
@@ -55,7 +57,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
             chain.doFilter(request, response);
         } catch (TokenExpiredException e) {
-            logger.error("Token Expired");
+            log.error("{}",e.getMessage());
 
         }
 

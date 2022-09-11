@@ -22,7 +22,7 @@ public class RestApiController {
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         member.setRole(Role.USER);
         memberRepository.save(member);
-        return ResponseEntity.ok("회원가입 완료");
+        return ResponseEntity.ok("User Joined");
     }
 
     @GetMapping("/api/v1/user/test")

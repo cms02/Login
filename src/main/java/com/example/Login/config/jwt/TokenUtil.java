@@ -10,18 +10,26 @@ import java.util.Date;
 
 public class TokenUtil {
 
-    public static String generateToken(Member member) {
+    private static int EXPIRATION_TIME;
+
+    public static String generateToken(Member member,TokenType tokenType) {
+
+        if (tokenType.equals(TokenType.ACCESS)) {
+            EXPIRATION_TIME = JwtProperties.ACCESS_TOKEN_EXPIRATION_TIME;
+        } else {
+            EXPIRATION_TIME = JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME;
+        }
 
         return JWT.create()
                 .withSubject("jwt")
-                .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
+                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .withClaim("username", member.getUsername())
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
     }
 
     public static String verifyToken(HttpServletRequest request) {
 
-        String jwtToken = request.getHeader(JwtProperties.HEADER_STRING).replace(JwtProperties.TOKEN_PREFIX, "");
+        String jwtToken = request.getHeader(JwtProperties.ACCESS_HEADER_STRING).replace(JwtProperties.TOKEN_PREFIX, "");
 
         return JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(jwtToken).getClaim("username").asString();
     }

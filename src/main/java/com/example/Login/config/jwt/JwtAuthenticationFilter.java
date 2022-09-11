@@ -20,6 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.example.Login.config.jwt.TokenType.ACCESS;
+import static com.example.Login.config.jwt.TokenType.REFRESH;
+
 @Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -70,10 +73,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .status(HttpStatus.OK)
                 .build();
 
-        /*JWT Token 생성 후 Response Header에 담기*/
-        String jwtToken = TokenUtil.generateToken(principalDetails.getMember());
+        /*JWT Token(ACCESS, REFRESH) 생성 후 Response Header에 담기*/
+        String accessToken = TokenUtil.generateToken(principalDetails.getMember(), ACCESS);
+        String refreshToken = TokenUtil.generateToken(principalDetails.getMember(), REFRESH);
 
-        response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
+        response.addHeader(JwtProperties.ACCESS_HEADER_STRING, JwtProperties.TOKEN_PREFIX + accessToken);
+        response.addHeader(JwtProperties.REFRESH_HEADER_STRING, JwtProperties.TOKEN_PREFIX + refreshToken);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(objectMapper.writeValueAsString(responseDto));

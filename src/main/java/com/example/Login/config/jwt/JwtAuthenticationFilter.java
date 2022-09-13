@@ -62,9 +62,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
 
-        /*JWT Token(ACCESS, REFRESH) 생성 후 Response Header에 담기*/
-        String accessToken = TokenUtil.generateToken(principalDetails.getMember(), ACCESS);
-        String refreshToken = TokenUtil.generateToken(principalDetails.getMember(), REFRESH);
+        /*JWT Token(ACCESS, REFRESH) 생성*/
+        String accessToken = TokenUtil.generateAccessToken(principalDetails.getMember());
+        String refreshToken = TokenUtil.generateRefreshToken();
 
         /*Login 성공 Response 담기*/
         MemberResponseDto.Login memberResponseDto = MemberResponseDto.Login.builder()
@@ -82,9 +82,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(objectMapper.writeValueAsString(responseDto));
-
-
-
 
     }
 }

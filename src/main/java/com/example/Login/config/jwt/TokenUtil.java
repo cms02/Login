@@ -12,18 +12,24 @@ public class TokenUtil {
 
     private static int EXPIRATION_TIME;
 
-    public static String generateToken(Member member,TokenType tokenType) {
+    public static String generateAccessToken(Member member) {
 
-        if (tokenType.equals(TokenType.ACCESS)) {
             EXPIRATION_TIME = JwtProperties.ACCESS_TOKEN_EXPIRATION_TIME;
-        } else {
-            EXPIRATION_TIME = JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME;
-        }
 
         return JWT.create()
                 .withSubject("jwt")
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .withClaim("username", member.getUsername())
+                .sign(Algorithm.HMAC512(JwtProperties.SECRET));
+    }
+
+    public static String generateRefreshToken() {
+
+        EXPIRATION_TIME = JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME;
+
+        return JWT.create()
+                .withSubject("jwt")
+                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
     }
 

@@ -1,7 +1,7 @@
 package com.example.Login.config;
 
-import com.example.Login.config.auth.handler.CustomAccessDeniedHandler;
-import com.example.Login.config.auth.handler.CustomAuthenticationEntryPoint;
+import com.example.Login.config.handler.CustomAccessDeniedHandler;
+import com.example.Login.config.handler.CustomAuthenticationEntryPoint;
 import com.example.Login.config.jwt.JwtAuthenticationFilter;
 import com.example.Login.config.jwt.JwtAuthorizationFilter;
 import com.example.Login.repository.MemberRepository;

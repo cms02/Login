@@ -11,5 +11,7 @@ public class MemberResponseDto {
     public static class Login {
         private String username;
         private String message;
+        private String accessToken;
+        private String refreshToken;
     }
 }

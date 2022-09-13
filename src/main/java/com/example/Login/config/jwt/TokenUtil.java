@@ -11,26 +11,30 @@ import java.util.Date;
 public class TokenUtil {
 
     private static int EXPIRATION_TIME;
+    private static String ACCESS_TOKEN;
+    private static String REFRESH_TOKEN;
 
     public static String generateAccessToken(Member member) {
 
-            EXPIRATION_TIME = JwtProperties.ACCESS_TOKEN_EXPIRATION_TIME;
-
-        return JWT.create()
-                .withSubject("jwt")
-                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .withClaim("username", member.getUsername())
-                .sign(Algorithm.HMAC512(JwtProperties.SECRET));
+        EXPIRATION_TIME = JwtProperties.ACCESS_TOKEN_EXPIRATION_TIME;
+        ACCESS_TOKEN = JwtProperties.TOKEN_PREFIX +
+                        JWT.create()
+                        .withSubject("jwt")
+                        .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                        .withClaim("username", member.getUsername())
+                        .sign(Algorithm.HMAC512(JwtProperties.SECRET));
+        return ACCESS_TOKEN;
     }
 
     public static String generateRefreshToken() {
 
         EXPIRATION_TIME = JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME;
-
-        return JWT.create()
-                .withSubject("jwt")
-                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .sign(Algorithm.HMAC512(JwtProperties.SECRET));
+        REFRESH_TOKEN = JwtProperties.TOKEN_PREFIX +
+                        JWT.create()
+                        .withSubject("jwt")
+                        .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                        .sign(Algorithm.HMAC512(JwtProperties.SECRET));
+        return REFRESH_TOKEN;
     }
 
     public static String verifyToken(HttpServletRequest request) {

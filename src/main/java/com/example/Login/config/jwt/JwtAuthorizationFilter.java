@@ -2,9 +2,12 @@ package com.example.Login.config.jwt;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.example.Login.config.auth.PrincipalDetails;
+import com.example.Login.dto.response.ResponseDto;
 import com.example.Login.entity.Member;
 import com.example.Login.repository.MemberRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,6 +26,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     /*인가 처리 관련 로직*/
 
     private final MemberRepository memberRepository;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager, MemberRepository memberRepository) {
         super(authenticationManager);
@@ -58,12 +63,17 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             chain.doFilter(request, response);
         } catch (TokenExpiredException e) {
             log.error("{}",e.getMessage());
+            ResponseDto responseDto = ResponseDto.builder()
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .message("Token Has Expired")
+                    .build();
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(objectMapper.writeValueAsString(responseDto));
+
 
         }
-
-
-
-
 
     }
 }

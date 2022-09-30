@@ -4,6 +4,7 @@ import com.example.Login.config.auth.handler.CustomAccessDeniedHandler;
 import com.example.Login.config.auth.handler.CustomAuthenticationEntryPoint;
 import com.example.Login.config.jwt.JwtAuthenticationFilter;
 import com.example.Login.config.jwt.JwtAuthorizationFilter;
+import com.example.Login.config.redis.RedisService;
 import com.example.Login.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,8 @@ public class SecurityConfig{
     private final CorsConfig corsConfig;
 
     private final MemberRepository memberRepository;
+
+    private final RedisService redisService;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -55,7 +58,7 @@ public class SecurityConfig{
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
             http
                     .addFilter(corsConfig.corsFilter())
-                    .addFilter(new JwtAuthenticationFilter(authenticationManager))
+                    .addFilter(new JwtAuthenticationFilter(authenticationManager, redisService))
                     .addFilter(new JwtAuthorizationFilter(authenticationManager, memberRepository));
 //            http
 //                    .exceptionHandling()

@@ -1,6 +1,7 @@
 package com.example.Login.config.jwt;
 
 import com.example.Login.config.auth.PrincipalDetails;
+import com.example.Login.config.redis.RedisService;
 import com.example.Login.dto.request.MemberRequestDto;
 import com.example.Login.dto.response.MemberResponseDto;
 import com.example.Login.dto.response.ResponseDto;
@@ -18,6 +19,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.Login.config.jwt.TokenType.ACCESS;
 import static com.example.Login.config.jwt.TokenType.REFRESH;
@@ -28,6 +30,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private ObjectMapper objectMapper = new ObjectMapper();
     private final AuthenticationManager authenticationManager;
+
+    private final RedisService redisService;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -78,14 +82,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .status(HttpStatus.OK)
                 .build();
 
-
-
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(objectMapper.writeValueAsString(responseDto));
 
-
-
+        redisService.setValues(principalDetails.getUsername(), refreshToken, JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME, TimeUnit.MILLISECONDS);
 
     }
 }

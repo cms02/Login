@@ -6,6 +6,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -18,16 +19,16 @@ public class RedisService {
         values.set(key, data);
     }
 
-    public void setValues(String key, String data, Duration duration) {
+    public void setValues(String key, String data, int expirationTime, TimeUnit timeUnit) {
         ValueOperations<String, String> values = redisTemplate.opsForValue();
-        values.set(key, data, duration);
+        values.set(key, data, expirationTime, timeUnit);
     }
 
     public String getValues(String key) {
         ValueOperations<String, String> values = redisTemplate.opsForValue();
         return values.get(key);
-    }
 
+    }
     public void deleteValues(String key) {
         redisTemplate.delete(key);
     }

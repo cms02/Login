@@ -16,6 +16,11 @@ public class MemberRequestDto {
     }
 
     @Data
+    public static class Logout {
+        private String accessToken;
+    }
+
+    @Data
     public static class Reissue {
         private String accessToken;
         private String refreshToken;

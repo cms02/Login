@@ -62,10 +62,11 @@ public class UserService {
 
         return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
 
-
-
-
-
     }
 
+    public ResponseEntity<String> logout(MemberRequestDto.Logout logout) {
+        String username = TokenUtil.verifyToken(logout.getAccessToken());
+        redisService.deleteValues(username);
+        return ResponseEntity.ok("Logout Success");
+    }
 }

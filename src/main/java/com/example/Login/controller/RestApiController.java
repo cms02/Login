@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,9 +31,13 @@ public class RestApiController {
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<ResponseDto> reissue(MemberRequestDto.Reissue reissue) {
-
+    public ResponseEntity<ResponseDto> reissue(@RequestBody MemberRequestDto.Reissue reissue) {
         return userService.reissue(reissue);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestBody MemberRequestDto.Logout logout) {
+        return userService.logout(logout);
     }
 
     @GetMapping("/api/v1/user/test")

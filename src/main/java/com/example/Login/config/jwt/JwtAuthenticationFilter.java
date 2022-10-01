@@ -66,8 +66,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
 
         /*JWT Token(ACCESS, REFRESH) 생성*/
-        String accessToken = TokenUtil.generateToken(principalDetails.getMember(), ACCESS);
-        String refreshToken = TokenUtil.generateToken(principalDetails.getMember(), REFRESH);
+        String accessToken = TokenUtil.generateToken(principalDetails.getMember().getUsername(), ACCESS);
+        String refreshToken = TokenUtil.generateToken(principalDetails.getMember().getUsername(), REFRESH);
 
         /*Login 성공 Response 담기*/
         MemberResponseDto.Login memberResponseDto = MemberResponseDto.Login.builder()

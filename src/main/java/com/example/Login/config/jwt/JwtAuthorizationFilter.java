@@ -47,7 +47,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         try {
             /*토큰 검증*/
-            String username = TokenUtil.verifyToken(request);
+            String jwtToken = request.getHeader(JwtProperties.ACCESS_HEADER_STRING).replace(JwtProperties.TOKEN_PREFIX, "");
+            String username = TokenUtil.verifyToken(jwtToken);
 
             if (username != null) {
                 Member member = memberRepository.findByUsername(username);

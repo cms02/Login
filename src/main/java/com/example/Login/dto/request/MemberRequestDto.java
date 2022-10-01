@@ -15,6 +15,9 @@ public class MemberRequestDto {
         private String username;
     }
 
-
-
+    @Data
+    public static class Reissue {
+        private String accessToken;
+        private String refreshToken;
+    }
 }

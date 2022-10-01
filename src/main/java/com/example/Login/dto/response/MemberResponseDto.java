@@ -14,4 +14,11 @@ public class MemberResponseDto {
         private String accessToken;
         private String refreshToken;
     }
+
+    @Data
+    @Builder
+    public static class TokenInfo {
+        private String accessToken;
+        private String refreshToken;
+    }
 }

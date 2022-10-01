@@ -52,15 +52,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
             if (username != null) {
                 Member member = memberRepository.findByUsername(username);
-
                 PrincipalDetails principalDetails = new PrincipalDetails(member);
-
                 Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
 
                 /*SecurityContext에 직접 접근 후 세션 생성 -> 자동으로 UserDetailsService에 있는 loadByUsername 호출*/
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-
             chain.doFilter(request, response);
         } catch (TokenExpiredException e) {
             log.error("{}",e.getMessage());
@@ -72,9 +69,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(objectMapper.writeValueAsString(responseDto));
-
-
         }
-
     }
 }

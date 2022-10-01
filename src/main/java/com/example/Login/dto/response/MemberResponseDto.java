@@ -19,6 +19,5 @@ public class MemberResponseDto {
     @Builder
     public static class TokenInfo {
         private String accessToken;
-        private String refreshToken;
     }
 }

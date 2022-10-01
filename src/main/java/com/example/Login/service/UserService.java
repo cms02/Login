@@ -38,19 +38,15 @@ public class UserService {
 
         if (!redisToken.isEmpty()) {
             String newAccessToken = TokenUtil.generateToken(username, TokenType.ACCESS);
-            String newRefreshToken = TokenUtil.generateToken(username, TokenType.REFRESH);
 
             MemberResponseDto.TokenInfo tokenInfo = MemberResponseDto.TokenInfo.builder()
                     .accessToken(newAccessToken)
-                    .refreshToken(newRefreshToken)
                     .build();
 
             ResponseDto responseDto = ResponseDto.builder()
                     .data(tokenInfo)
                     .status(HttpStatus.OK)
                     .build();
-
-            redisService.setValues(username, newRefreshToken, JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME, TimeUnit.MILLISECONDS);
 
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
         }
